@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class Movement : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Movement : MonoBehaviour
     public PlayerMoveAction PlayerControls;
     public float moveSpeed = 5f;
     public GameObject pauseMenu;
+    public GameObject firstSelectedPauseMenu;
 
 
 
@@ -22,6 +24,7 @@ public class Movement : MonoBehaviour
     private InputAction Fire;
     private InputAction pause;
     private bool pauseState=false;
+    private GameObject currentSelected;
     private void Awake()
     {
         PlayerControls=new PlayerMoveAction();
@@ -64,7 +67,15 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+       if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            currentSelected = EventSystem.current.currentSelectedGameObject;
+        }
+        if(EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(currentSelected);
+        }
+
     }
     //Physics Update
     private void FixedUpdate()
@@ -91,6 +102,7 @@ public class Movement : MonoBehaviour
              pauseMenu.SetActive(true);
              Time.timeScale=0f;
               pauseState=true;
+                EventSystem.current.SetSelectedGameObject(firstSelectedPauseMenu);
           }
         }
     
